@@ -10,12 +10,12 @@ Requirements
 
 Example Playbook
 ----------------
-
+```
 - hosts: servers
   become: true
   roles:
     - frr-prometheus-exporter-role
-
+```
 License
 -------
 
