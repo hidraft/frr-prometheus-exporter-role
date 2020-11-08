@@ -1,0 +1,8 @@
+---
+# handlers file for frr-prometheus-exporter-role
+- name: restart frr exporter
+  become: true
+  systemd:
+    name: frr-prometheus-stats
+    state: restarted
+    daemon_reload: True

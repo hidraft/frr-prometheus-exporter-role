@@ -1,0 +1,13 @@
+[Unit]
+Description=FRR Promtheus Stats
+After=frr.service
+
+[Service]
+Type=simple
+ExecStart=/opt/frr-prometheus-stats/venv/bin/python3 /opt/frr-prometheus-stats/venv/bin/frr-prometheus-stats.py
+RestartSec=60
+Restart=always
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

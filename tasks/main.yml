@@ -1,0 +1,38 @@
+---
+# tasks file for frr-prometheus-exporter-role
+- name: Install package requirements
+  package:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - python3-pip
+    - virtualenv
+- name: Manually create the initial virtualenv
+  command:
+    cmd: virtualenv /opt/frr-prometheus-stats/venv -p python3
+    creates: "/opt/frr-prometheus-stats/venv"
+- name: Install specified python requirements
+  pip:
+    name:
+      - prometheus-client==0.8.0
+    virtualenv: /opt/frr-prometheus-stats/venv
+- name: install exporter
+  become: true
+  copy:
+    src: frr-prometheus-stats.py
+    dest: /opt/frr-prometheus-stats/venv/bin/frr-prometheus-stats.py
+    mode: "0755"
+  notify: restart frr exporter
+- name: install exporter service
+  become: true
+  copy:
+    src: frr-prometheus-stats.service
+    dest: /etc/systemd/system/frr-prometheus-stats.service
+  notify: restart frr exporter
+- name: start exporter
+  become: true
+  systemd:
+    state: started
+    enabled: True
+    name: frr-prometheus-stats
